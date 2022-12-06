@@ -1,6 +1,6 @@
 [
  {
-  "directory": "D:\\ClionProject\\C++\\WebServer-02\\test",
+  "directory": "C:\\Users\\15018\\CLionProjects\\C++\\WebServer-02\\test",
   "arguments": [
    "g++",
    "-std=c++14",
@@ -21,4 +21,5 @@
   ],
   "file": "../test/test.cpp"
  }
-]
+]
+
