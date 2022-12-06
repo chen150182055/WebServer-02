@@ -76,7 +76,9 @@ void WebServer::InitEventMode_(int trigMode) {
 
 void WebServer::Start() {
     int timeMS = -1;  /* epoll wait timeout == -1 无事件将阻塞 */
-    if(!isClose_) { LOG_INFO("========== Server start =========="); }
+    if(!isClose_) {
+        LOG_INFO("========== Server start ==========");
+    }
     while(!isClose_) {
         if(timeoutMS_ > 0) {
             timeMS = timer_->GetNextTick();
@@ -163,7 +165,9 @@ void WebServer::DealWrite_(HttpConn* client) {
 
 void WebServer::ExtentTime_(HttpConn* client) {
     assert(client);
-    if(timeoutMS_ > 0) { timer_->adjust(client->GetFd(), timeoutMS_); }
+    if(timeoutMS_ > 0) {
+        timer_->adjust(client->GetFd(), timeoutMS_);
+    }
 }
 
 void WebServer::OnRead_(HttpConn* client) {
