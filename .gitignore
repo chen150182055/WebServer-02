@@ -11,4 +11,5 @@
 *.1
 *.log
 *.exe
+*.json
 /.vscode
