@@ -15,6 +15,7 @@
 #include <atomic>
 #include <assert.h>
 
+//用于缓冲数据的类
 class Buffer {
 public:
     Buffer(int initBuffSize = 1024);

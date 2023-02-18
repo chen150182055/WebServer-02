@@ -21,6 +21,7 @@ typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::milliseconds MS;
 typedef Clock::time_point TimeStamp;
 
+//用于存储定时任务的ID、到期时间、回调函数
 struct TimerNode {
     int id;
     TimeStamp expires;
@@ -31,6 +32,9 @@ struct TimerNode {
     }
 };
 
+//堆定时器
+//实现事实任务的管理
+//可以添加和移除任务、调整任务的到期时间
 class HeapTimer {
 public:
     HeapTimer() { heap_.reserve(64); }

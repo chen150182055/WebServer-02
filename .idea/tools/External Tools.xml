@@ -1,14 +1,14 @@
 <toolSet name="External Tools">
   <tool name="build_with_make" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
     <exec>
-      <option name="COMMAND" value="make" />
+      <option name="COMMAND" value="\\wsl$\Ubuntu-22.04\usr\bin\make" />
       <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
     </exec>
   </tool>
   <tool name="build_with_clean" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
     <exec>
-      <option name="COMMAND" value="make" />
+      <option name="COMMAND" value="\\wsl$\Ubuntu-22.04\usr\bin\make" />
       <option name="PARAMETERS" value="clean" />
       <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
     </exec>

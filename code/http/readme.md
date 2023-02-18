@@ -1,6 +1,1 @@
-<!--
- * @Author       : mark
- * @Date         : 2020-06-19
- * @copyleft GPL 2.0
---> 
-HTTP
+利用正则与状态机解析HTTP请求报文，实现处理静态资源的请求
