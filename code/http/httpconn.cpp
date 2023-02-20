@@ -1,8 +1,3 @@
-/*
- * @Author       : mark
- * @Date         : 2020-06-15
- * @copyleft Apache 2.0
- */
 #include "httpconn.h"
 
 using namespace std;
@@ -11,16 +6,27 @@ const char *HttpConn::srcDir;
 std::atomic<int> HttpConn::userCount;
 bool HttpConn::isET;
 
+/**
+ *
+ */
 HttpConn::HttpConn() {
     fd_ = -1;
     addr_ = {0};
     isClose_ = true;
 };
 
+/**
+ *
+ */
 HttpConn::~HttpConn() {
     Close();
 };
 
+/**
+ *
+ * @param fd
+ * @param addr
+ */
 void HttpConn::init(int fd, const sockaddr_in &addr) {
     assert(fd > 0);
     userCount++;
@@ -32,6 +38,9 @@ void HttpConn::init(int fd, const sockaddr_in &addr) {
     LOG_INFO("Client[%d](%s:%d) in, userCount:%d", fd_, GetIP(), GetPort(), (int) userCount);
 }
 
+/**
+ *
+ */
 void HttpConn::Close() {
     response_.UnmapFile();
     if (isClose_ == false) {
@@ -42,22 +51,43 @@ void HttpConn::Close() {
     }
 }
 
+/**
+ *
+ * @return
+ */
 int HttpConn::GetFd() const {
     return fd_;
 };
 
+/**
+ *
+ * @return
+ */
 struct sockaddr_in HttpConn::GetAddr() const {
     return addr_;
 }
 
+/**
+ *
+ * @return
+ */
 const char *HttpConn::GetIP() const {
     return inet_ntoa(addr_.sin_addr);
 }
 
+/**
+ *
+ * @return
+ */
 int HttpConn::GetPort() const {
     return addr_.sin_port;
 }
 
+/**
+ *
+ * @param saveErrno
+ * @return
+ */
 ssize_t HttpConn::read(int *saveErrno) {
     ssize_t len = -1;
     do {
@@ -69,6 +99,11 @@ ssize_t HttpConn::read(int *saveErrno) {
     return len;
 }
 
+/**
+ *
+ * @param saveErrno
+ * @return
+ */
 ssize_t HttpConn::write(int *saveErrno) {
     ssize_t len = -1;
     do {
@@ -94,6 +129,10 @@ ssize_t HttpConn::write(int *saveErrno) {
     return len;
 }
 
+/**
+ *
+ * @return
+ */
 bool HttpConn::process() {
     request_.Init();
     if (readBuff_.ReadableBytes() <= 0) {

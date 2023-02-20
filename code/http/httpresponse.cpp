@@ -1,8 +1,3 @@
-/*
- * @Author       : mark
- * @Date         : 2020-06-27
- * @copyleft Apache 2.0
- */
 #include "httpresponse.h"
 
 using namespace std;
@@ -42,6 +37,7 @@ const unordered_map<int, string> HttpResponse::CODE_PATH = {
         {404, "/404.html"},
 };
 
+
 HttpResponse::HttpResponse() {
     code_ = -1;
     path_ = srcDir_ = "";
@@ -50,10 +46,20 @@ HttpResponse::HttpResponse() {
     mmFileStat_ = {0};
 };
 
+/**
+ *
+ */
 HttpResponse::~HttpResponse() {
     UnmapFile();
 }
 
+/**
+ *
+ * @param srcDir
+ * @param path
+ * @param isKeepAlive
+ * @param code
+ */
 void HttpResponse::Init(const string &srcDir, string &path, bool isKeepAlive, int code) {
     assert(srcDir != "");
     if (mmFile_) { UnmapFile(); }
@@ -65,6 +71,10 @@ void HttpResponse::Init(const string &srcDir, string &path, bool isKeepAlive, in
     mmFileStat_ = {0};
 }
 
+/**
+ *
+ * @param buff
+ */
 void HttpResponse::MakeResponse(Buffer &buff) {
     /* 判断请求的资源文件 */
     if (stat((srcDir_ + path_).data(), &mmFileStat_) < 0 || S_ISDIR(mmFileStat_.st_mode)) {
@@ -80,14 +90,25 @@ void HttpResponse::MakeResponse(Buffer &buff) {
     AddContent_(buff);
 }
 
+/**
+ *
+ * @return
+ */
 char *HttpResponse::File() {
     return mmFile_;
 }
 
+/**
+ *
+ * @return
+ */
 size_t HttpResponse::FileLen() const {
     return mmFileStat_.st_size;
 }
 
+/**
+ *
+ */
 void HttpResponse::ErrorHtml_() {
     if (CODE_PATH.count(code_) == 1) {
         path_ = CODE_PATH.find(code_)->second;
@@ -95,6 +116,10 @@ void HttpResponse::ErrorHtml_() {
     }
 }
 
+/**
+ *
+ * @param buff
+ */
 void HttpResponse::AddStateLine_(Buffer &buff) {
     string status;
     if (CODE_STATUS.count(code_) == 1) {
@@ -106,6 +131,10 @@ void HttpResponse::AddStateLine_(Buffer &buff) {
     buff.Append("HTTP/1.1 " + to_string(code_) + " " + status + "\r\n");
 }
 
+/**
+ *
+ * @param buff
+ */
 void HttpResponse::AddHeader_(Buffer &buff) {
     buff.Append("Connection: ");
     if (isKeepAlive_) {
@@ -117,6 +146,10 @@ void HttpResponse::AddHeader_(Buffer &buff) {
     buff.Append("Content-type: " + GetFileType_() + "\r\n");
 }
 
+/**
+ *
+ * @param buff
+ */
 void HttpResponse::AddContent_(Buffer &buff) {
     int srcFd = open((srcDir_ + path_).data(), O_RDONLY);
     if (srcFd < 0) {
@@ -137,6 +170,9 @@ void HttpResponse::AddContent_(Buffer &buff) {
     buff.Append("Content-length: " + to_string(mmFileStat_.st_size) + "\r\n\r\n");
 }
 
+/**
+ *
+ */
 void HttpResponse::UnmapFile() {
     if (mmFile_) {
         munmap(mmFile_, mmFileStat_.st_size);
@@ -144,6 +180,10 @@ void HttpResponse::UnmapFile() {
     }
 }
 
+/**
+ *
+ * @return
+ */
 string HttpResponse::GetFileType_() {
     /* 判断文件类型 */
     string::size_type idx = path_.find_last_of('.');
@@ -157,6 +197,11 @@ string HttpResponse::GetFileType_() {
     return "text/plain";
 }
 
+/**
+ *
+ * @param buff
+ * @param message
+ */
 void HttpResponse::ErrorContent(Buffer &buff, string message) {
     string body;
     string status;

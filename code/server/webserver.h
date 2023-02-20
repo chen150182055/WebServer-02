@@ -1,8 +1,3 @@
-/*
- * @Author       : mark
- * @Date         : 2020-06-17
- * @copyleft Apache 2.0
- */
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
@@ -23,6 +18,9 @@
 #include "../pool/sqlconnRAII.h"
 #include "../http/httpconn.h"
 
+//定义了WebServer类,该类用于构建WebServer。使用Epoller来监听新连接
+//并使用回调函数来创建HttpConn对象来处理连接的读写事件,最后使用线程池将
+//客户端任务与数据库任务加入工作队列中进行后续处理
 class WebServer {
 public:
     WebServer(

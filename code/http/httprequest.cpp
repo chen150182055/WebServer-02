@@ -1,8 +1,3 @@
-/*
- * @Author       : mark
- * @Date         : 2020-06-26
- * @copyleft Apache 2.0
- */
 #include "httprequest.h"
 
 using namespace std;
@@ -15,6 +10,9 @@ const unordered_map<string, int> HttpRequest::DEFAULT_HTML_TAG{
         {"/register.html", 0},
         {"/login.html",    1},};
 
+/**
+ *
+ */
 void HttpRequest::Init() {
     method_ = path_ = version_ = body_ = "";
     state_ = REQUEST_LINE;
@@ -22,6 +20,10 @@ void HttpRequest::Init() {
     post_.clear();
 }
 
+/**
+ *
+ * @return
+ */
 bool HttpRequest::IsKeepAlive() const {
     if (header_.count("Connection") == 1) {
         return header_.find("Connection")->second == "keep-alive" && version_ == "1.1";
@@ -29,6 +31,11 @@ bool HttpRequest::IsKeepAlive() const {
     return false;
 }
 
+/**
+ *
+ * @param buff
+ * @return
+ */
 bool HttpRequest::parse(Buffer &buff) {
     const char CRLF[] = "\r\n";
     if (buff.ReadableBytes() <= 0) {
@@ -63,6 +70,9 @@ bool HttpRequest::parse(Buffer &buff) {
     return true;
 }
 
+/**
+ *
+ */
 void HttpRequest::ParsePath_() {
     if (path_ == "/") {
         path_ = "/index.html";
@@ -76,6 +86,11 @@ void HttpRequest::ParsePath_() {
     }
 }
 
+/**
+ *
+ * @param line
+ * @return
+ */
 bool HttpRequest::ParseRequestLine_(const string &line) {
     regex patten("^([^ ]*) ([^ ]*) HTTP/([^ ]*)$");
     smatch subMatch;
@@ -90,6 +105,10 @@ bool HttpRequest::ParseRequestLine_(const string &line) {
     return false;
 }
 
+/**
+ *
+ * @param line
+ */
 void HttpRequest::ParseHeader_(const string &line) {
     regex patten("^([^:]*): ?(.*)$");
     smatch subMatch;
@@ -100,6 +119,10 @@ void HttpRequest::ParseHeader_(const string &line) {
     }
 }
 
+/**
+ *
+ * @param line
+ */
 void HttpRequest::ParseBody_(const string &line) {
     body_ = line;
     ParsePost_();
@@ -107,12 +130,20 @@ void HttpRequest::ParseBody_(const string &line) {
     LOG_DEBUG("Body:%s, len:%d", line.c_str(), line.size());
 }
 
+/**
+ *
+ * @param ch
+ * @return
+ */
 int HttpRequest::ConverHex(char ch) {
     if (ch >= 'A' && ch <= 'F') return ch - 'A' + 10;
     if (ch >= 'a' && ch <= 'f') return ch - 'a' + 10;
     return ch;
 }
 
+/**
+ *
+ */
 void HttpRequest::ParsePost_() {
     if (method_ == "POST" && header_["Content-Type"] == "application/x-www-form-urlencoded") {
         ParseFromUrlencoded_();
@@ -131,6 +162,9 @@ void HttpRequest::ParsePost_() {
     }
 }
 
+/**
+ *
+ */
 void HttpRequest::ParseFromUrlencoded_() {
     if (body_.size() == 0) { return; }
 
@@ -172,6 +206,13 @@ void HttpRequest::ParseFromUrlencoded_() {
     }
 }
 
+/**
+ *
+ * @param name
+ * @param pwd
+ * @param isLogin
+ * @return
+ */
 bool HttpRequest::UserVerify(const string &name, const string &pwd, bool isLogin) {
     if (name == "" || pwd == "") { return false; }
     LOG_INFO("Verify name:%s pwd:%s", name.c_str(), pwd.c_str());
@@ -232,22 +273,43 @@ bool HttpRequest::UserVerify(const string &name, const string &pwd, bool isLogin
     return flag;
 }
 
+/**
+ *
+ * @return
+ */
 std::string HttpRequest::path() const {
     return path_;
 }
 
+/**
+ *
+ * @return
+ */
 std::string &HttpRequest::path() {
     return path_;
 }
 
+/**
+ *
+ * @return
+ */
 std::string HttpRequest::method() const {
     return method_;
 }
 
+/**
+ *
+ * @return
+ */
 std::string HttpRequest::version() const {
     return version_;
 }
 
+/**
+ *
+ * @param key
+ * @return
+ */
 std::string HttpRequest::GetPost(const std::string &key) const {
     assert(key != "");
     if (post_.count(key) == 1) {
@@ -256,6 +318,11 @@ std::string HttpRequest::GetPost(const std::string &key) const {
     return "";
 }
 
+/**
+ *
+ * @param key
+ * @return
+ */
 std::string HttpRequest::GetPost(const char *key) const {
     assert(key != nullptr);
     if (post_.count(key) == 1) {
